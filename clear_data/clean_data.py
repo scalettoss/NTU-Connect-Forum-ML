@@ -11,16 +11,13 @@ def xoa_stopwords(text):
     return ' '.join(filtered_words)
 
 def chuan_hoa_text(text):
-    text = text.lower()
-    # Loại bỏ dấu câu
-    text = re.sub(r'[^\w\s]', '', text)
-    # Loại bỏ chữ số
-    text = re.sub(r'\d+', '', text)
-    # Chuẩn hóa tiếng Việt
-    text = ViTokenizer.tokenize(text)
-    # Loại bỏ khoảng trắng thừa
-    text = ' '.join(text.split())
-    return text
+    text_lower = text.lower()
+    text_remove_special = re.sub(r'[^\w\s]', '', text_lower)
+    text_remove_space = text_remove_special.strip()
+    text_to_unicode = normalize_to_unicode(text_remove_space)
+    tokenized_text = ViTokenizer.tokenize(text_to_unicode)
+    text_remove_stopword = remove_stopwords(tokenized_text)
+    return text_remove_stopword
 
 def preprocess_text(text):
     text = xoa_stopwords(text)
